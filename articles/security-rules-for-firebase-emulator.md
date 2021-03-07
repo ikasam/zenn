@@ -3,7 +3,7 @@ title: "Firebase Emulator のセキュリティルール設定でハマったポ
 emoji: "📛"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Firebase", "RealtimeDatabase"]
-published: false
+published: true
 ---
 
 # 前提条件
@@ -34,10 +34,10 @@ ENTRYPOINT ["firebase", "emulators:start"]
 http://localhost:9000/path/to/my/data.json?ns=<database_name>
 ```
 
-# セキュリティルールが適用される先は1インスタンスのみ
+# セキュリティルールが適用される先は 1 インスタンスのみ
 
 Emulator の Realtime Database にセキュリティルールを設定する際は `firebase.json` でセキュリティルールを記述したファイルを指定します。 [^setting-emulator-security-rules]
-しかし、ここで指定したセキュリティルールは **1インスタンスのみ** 適用されます。
+しかし、ここで指定したセキュリティルールは **1 インスタンスのみ** 適用されます。
 具体的には、`<project-name>-default-rtdb` にのみ適用されます。
 
 つまり、
@@ -45,11 +45,11 @@ Emulator の Realtime Database にセキュリティルールを設定する際�
 - Emulator の Realtime Database のエンドポイントが `http://localhost:9000/`
 - Project name が `example` のとき
 
-| Endpoint | セキュリティルール |
-| -------- | --------------- |
-| `http://localhost:9000/.json?ns=example-default-rtdb` | 適用される |
-| `http://localhost:9000/.json?ns=example` | 適用されない |
-| `http://localhost:9000/.json` | 適用されない |
+| Endpoint                                              | セキュリティルール |
+| ----------------------------------------------------- | ------------------ |
+| `http://localhost:9000/.json?ns=example-default-rtdb` | 適用される         |
+| `http://localhost:9000/.json?ns=example`              | 適用されない       |
+| `http://localhost:9000/.json`                         | 適用されない       |
 
 となります。
 
@@ -96,6 +96,7 @@ $ curl -X GET 'http://localhost:9000/.settings/rules.json' \
 ```
 
 # まとめ
+
 - Emulator の Realtime Database でセキュリティルールが適用されるインスタンスは `<project-name>-default-rtdb`
 - インスタンスごとのセキュリティルールを確認する際は、 `owner` を管理者トークンとして渡す
   - `access_token` クエリパラメータ、または `Authorization` ヘッダに Bearer token として渡す
