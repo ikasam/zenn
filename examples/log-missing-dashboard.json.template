@@ -1,0 +1,157 @@
+{
+  "name": "Logs Missings",
+  "description": null,
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "name": "Production",
+      "description": null,
+      "widgets": [
+        {
+          "title": "history",
+          "layout": {
+            "column": 1,
+            "row": 2,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  YOUR_ACCOUNT_ID
+                ],
+                "query": "SELECT \n  filter(count(*), WHERE message = 'batch started') AS 'start logs(count)',\n  filter(count(*), WHERE message = 'batch finished') AS 'end logs(count)'\nFROM Log\nWHERE\n  ecs_cluster = {{ecs_cluster}}\nTIMESERIES AUTO\n"
+              },
+              {
+                "accountIds": [
+                  YOUR_ACCOUNT_ID
+                ],
+                "query": "SELECT \n  (filter(count(*), WHERE message = 'batch started') - filter(count(*), WHERE message = 'batch finished')) / filter(count(*), WHERE message = 'batch started') AS 'missing ratio(%)'\nFROM Log\nWHERE\n  ecs_cluster = {{ecs_cluster}}\nTIMESERIES AUTO\n"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "units": {
+              "seriesOverrides": [
+                {
+                  "seriesName": "missing ratio(%)",
+                  "unit": "PERCENTAGE"
+                }
+              ],
+              "unit": "COUNT"
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "series": [
+                {
+                  "name": "missing ratio"
+                },
+                {
+                  "name": "missing ratio(%)"
+                }
+              ],
+              "zero": true
+            }
+          }
+        },
+        {
+          "title": "now",
+          "layout": {
+            "column": 5,
+            "row": 2,
+            "width": 2,
+            "height": 3
+          },
+          "linkedEntityGuids": null,
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "missing ratio(%)",
+                "precision": 2,
+                "type": "humanized"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountIds": [
+                  YOUR_ACCOUNT_ID
+                ],
+                "query": "SELECT \n  (filter(count(*), WHERE message = 'batch started') - filter(count(*), WHERE message = 'batch finished')) / filter(count(*), WHERE message = 'batch started') * 100 AS 'missing ratio(%)'\nFROM Log\nWHERE\n  ecs_cluster = {{ecs_cluster}}\n\n"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": [
+              {
+                "alertSeverity": "WARNING",
+                "value": 0
+              },
+              {
+                "alertSeverity": "CRITICAL",
+                "value": 5
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "ecs_cluster",
+      "items": [
+        {
+          "title": null,
+          "value": "development"
+        },
+        {
+          "title": null,
+          "value": "staging"
+        },
+        {
+          "title": null,
+          "value": "production"
+        }
+      ],
+      "defaultValues": [
+        {
+          "value": {
+            "string": "production"
+          }
+        }
+      ],
+      "nrqlQuery": null,
+      "options": {
+        "excluded": false
+      },
+      "title": "env",
+      "type": "ENUM",
+      "isMultiSelection": false,
+      "replacementStrategy": "STRING"
+    }
+  ]
+}
