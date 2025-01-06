@@ -352,7 +352,7 @@ TIMESERIES AUTO
 :::
 
 :::message
-このダッシュボードを簡単に構築できるよう、[テンプレートをリポジトリで公開](https://github.com/ikasam/zenn/blob/main/examples/log-missings-dashboard.json.template)しています。
+このダッシュボードを簡単に構築できるよう、[テンプレートをリポジトリで公開](https://github.com/ikasam/zenn/blob/main/examples/log-missing-dashboard.json.template)しています。
 テンプレート中の `YOUR_ACCOUNT_ID` を自分の New Relic アカウント ID に置換し、ダッシュボードにインポートしてください。
 :::
 
